@@ -24,8 +24,11 @@ EVENTS = {
 
 def load_athletes(filename: str) -> pd.DataFrame:
     path = RAW_DIR / filename
-    with open(path) as f:
-        data = json.load(f)
+    try:
+        text = path.read_text(encoding="utf-8")
+    except UnicodeDecodeError:
+        text = path.read_text(encoding="cp1252")
+    data = json.loads(text)
     evt = data["data"]["event"]
     rows = []
     seen = set()
